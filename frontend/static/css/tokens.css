@@ -1,0 +1,146 @@
+/* ── Design Tokens ──────────────────────────────────────────── */
+:root {
+  /* ── Backgrounds: deep navy slate, not pure black ── */
+  --bg-void:    #070b12;   /* deepest surface — page bg */
+  --bg-deep:    #0b1018;   /* near-void — hero areas */
+  --bg-base:    #111928;   /* default surface */
+  --bg-raised:  #182030;   /* raised cards */
+  --bg-hover:   #1e2840;   /* hover state */
+  --bg-active:  #243050;   /* active / selected */
+
+  /* ── Glass surfaces ── */
+  --glass:          rgba(11, 16, 24, 0.92);
+  --glass-light:    rgba(18, 25, 40, 0.78);
+  --glass-border:   rgba(255, 255, 255, 0.07);
+  --glass-border-b: rgba(212, 165, 58, 0.22);
+
+  /* ── AURUM accent system ── */
+  /* Primary: warm gold — knowledge, wisdom, value */
+  --gold:         #d4a53a;
+  --gold-bright:  #f0c060;
+  --gold-dim:     #9a7428;
+  --gold-soft:    rgba(212, 165, 58, 0.12);
+  --gold-glow:    0 0 24px rgba(212, 165, 58, 0.18);
+
+  /* Secondary: clear electric blue — intelligence, clarity */
+  --blue:         #4f82f5;
+  --blue-bright:  #7aa8ff;
+  --blue-soft:    rgba(79, 130, 245, 0.12);
+  --blue-glow:    0 0 20px rgba(79, 130, 245, 0.2);
+
+  /* Tertiary: muted violet — creativity, depth */
+  --violet:       #9b7fea;
+  --violet-soft:  rgba(155, 127, 234, 0.12);
+  --violet-glow:  0 0 20px rgba(155, 127, 234, 0.18);
+
+  /* Status */
+  --green:      #3dd68c;
+  --green-soft: rgba(61, 214, 140, 0.1);
+  --red:        #f87171;
+  --red-soft:   rgba(248, 113, 113, 0.1);
+
+  /* ── Aliases (keep backward compat with existing code) ── */
+  /* Map old neon- vars to new aurum palette */
+  --neon-cyan:    var(--gold-bright);   /* previously cyan, now gold */
+  --neon-blue:    var(--blue);
+  --neon-purple:  var(--violet);
+  --neon-green:   var(--green);
+  --neon-pink:    #f472b6;
+  --neon-amber:   var(--gold);
+  --glow-cyan:    var(--gold-glow);
+  --glow-blue:    var(--blue-glow);
+  --glow-purple:  var(--violet-glow);
+  --glow-green:   0 0 18px rgba(61, 214, 140, 0.35);
+
+  /* ── Text ── */
+  --text-primary:   #e4e8f5;   /* warm white */
+  --text-secondary: #8898b8;   /* cool grey-blue */
+  --text-muted:     #4a5570;   /* dim */
+  --text-accent:    var(--gold-bright);
+  --text-bright:    #f2f5ff;
+
+  /* ── Semantic aliases ── */
+  --canvas:       var(--bg-deep);
+  --surface:      var(--bg-raised);
+  --surface-soft: var(--bg-base);
+  --surface-warm: var(--bg-raised);
+  --accent:       var(--gold);
+  --border:       var(--glass-border);
+  --border-soft:  rgba(255, 255, 255, 0.04);
+
+  /* ── Ink scale (gray ladder) ── */
+  --ink-900: #e4e8f5;
+  --ink-800: #c0c8e0;
+  --ink-700: #98a4c4;
+  --ink-600: #6e7ea8;
+  --ink-500: #4e5878;
+  --ink-400: #323c58;
+  --ink-300: #1e2740;
+  --ink-200: #131d30;
+  --ink-150: rgba(212, 165, 58, 0.15);
+  --ink-100: rgba(212, 165, 58, 0.07);
+  --ink-50:  rgba(212, 165, 58, 0.03);
+
+  /* ── Accent chips ── */
+  --rose:         #f472b6;
+  --rose-soft:    rgba(244, 114, 182, 0.12);
+  --rose-text:    #f9a8d4;
+  --mint:         #3dd68c;
+  --mint-soft:    rgba(61, 214, 140, 0.1);
+  --mint-text:    #6ee7b7;
+  --amber:        var(--gold);
+  --amber-soft:   var(--gold-soft);
+  --amber-text:   var(--gold-bright);
+  --sky:          var(--blue);
+  --sky-soft:     var(--blue-soft);
+  --sky-text:     var(--blue-bright);
+  --peach:        #fb923c;
+  --peach-soft:   rgba(251, 146, 60, 0.1);
+  --peach-text:   #fdba74;
+  --lavender:     var(--violet);
+  --lavender-soft:var(--violet-soft);
+  --lavender-text:#c4b5fd;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 12px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 28px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,0.65);
+
+  /* ── Typography ── */
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ── Spacing ── */
+  --space-1:  4px; --space-2:  8px;  --space-3:  12px;
+  --space-4:  16px;--space-5:  20px; --space-6:  24px;
+  --space-8:  32px;--space-10: 40px; --space-12: 48px;
+  --space-16: 64px;--space-20: 80px;
+
+  /* ── Radii ── */
+  --r-sm: 6px; --r-md: 12px; --r-lg: 18px;
+  --r-xl: 24px; --r-full: 999px;
+
+  /* ── Transitions ── */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 180ms; --dur-base: 300ms; --dur-slow: 520ms;
+}
+
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--font-body);
+  background: var(--bg-void);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+}

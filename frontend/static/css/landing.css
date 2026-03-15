@@ -1,0 +1,225 @@
+.landing-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 40px;
+  position: relative; z-index: 2;
+  border-bottom: 1px solid rgba(110, 90, 255, 0.08);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #0c1018;
+  box-shadow: 0 0 14px rgba(212,165,58,0.3);
+}
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem; font-weight: 700;
+  background: linear-gradient(125deg, var(--gold-bright) 0%, var(--gold) 60%, #c07a1a 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  letter-spacing: -0.03em;
+}
+.nav-pills { display: flex; gap: 10px; }
+.nav-pill {
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-full);
+  color: var(--text-secondary);
+  font-size: 0.82rem; font-weight: 500;
+  cursor: pointer; font-family: var(--font-body);
+  transition: all var(--dur-fast) var(--ease-smooth);
+}
+.nav-pill:hover {
+  border-color: rgba(212,165,58,0.35);
+  color: var(--gold-bright);
+  background: rgba(212,165,58,0.06);
+}
+.nav-pill.active-cta {
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
+  border-color: transparent; color: #0c1018;
+  font-weight: 700;
+  box-shadow: 0 2px 14px rgba(212,165,58,0.28);
+}
+.nav-pill.active-cta:hover { filter: brightness(1.1); }
+
+.landing-main {
+  max-width: 780px; margin: 0 auto;
+  padding: 70px 24px 60px;
+  text-align: center;
+  position: relative; z-index: 2;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(212, 165, 58, 0.08);
+  border: 1px solid rgba(212, 165, 58, 0.22);
+  border-radius: var(--r-full);
+  padding: 5px 16px;
+  font-size: 0.73rem; font-weight: 600;
+  color: var(--gold-bright); letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.eyebrow-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(212,165,58,0.6);
+  animation: pulse 2.5s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%  { opacity: 0.5; transform: scale(0.65); }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6.5vw, 4.8rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--text-bright);
+  margin-bottom: 20px;
+}
+/* Gold accent word — warm, not neon */
+.hero-title em {
+  font-style: normal;
+  background: linear-gradient(125deg, var(--gold-bright) 0%, var(--gold) 55%, #c9923a 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-sub {
+  color: var(--text-secondary);
+  font-size: 1.02rem; line-height: 1.75;
+  max-width: 600px; margin: 0 auto 38px;
+  font-weight: 400;
+}
+
+/* Search box — elevated card feel */
+.search-container {
+  display: flex; align-items: center;
+  background: rgba(18, 25, 40, 0.94);
+  border: 1.5px solid rgba(255,255,255,0.09);
+  border-radius: 18px;
+  padding: 7px 7px 7px 20px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+  max-width: 680px; margin: 0 auto;
+}
+.search-container:focus-within {
+  border-color: rgba(212, 165, 58, 0.4);
+  box-shadow: var(--gold-glow), 0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.search-icon { color: var(--text-muted); display: flex; flex-shrink: 0; }
+.search-input {
+  flex: 1; background: none; border: none; outline: none;
+  font-family: var(--font-body); font-size: 0.98rem;
+  color: var(--text-primary); padding: 10px 14px;
+}
+.search-input::placeholder { color: var(--text-muted); }
+/* Gold search button — the key CTA */
+.search-btn {
+  display: flex; align-items: center; gap: 7px;
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
+  border: none; border-radius: 12px;
+  color: #0c1018;
+  font-weight: 700; font-size: 0.88rem; font-family: var(--font-body);
+  padding: 11px 22px; cursor: pointer;
+  transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 2px 16px rgba(212,165,58,0.28);
+  white-space: nowrap; flex-shrink: 0;
+  letter-spacing: -0.01em;
+}
+.search-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 24px rgba(212,165,58,0.38);
+}
+
+/* Popular chips */
+.popular-section {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; justify-content: center;
+  margin: 28px auto 0; max-width: 680px;
+}
+.popular-label {
+  font-size: 0.72rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+.popular-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.popular-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: var(--r-full);
+  border: 1px solid transparent;
+  font-size: 0.8rem; font-weight: 500; font-family: var(--font-body);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-smooth);
+}
+.chip-icon { font-size: 0.9rem; }
+.chip-rose    { background: var(--rose-soft);    color: var(--rose-text);    border-color: rgba(255,95,173,0.2); }
+.chip-sky     { background: var(--sky-soft);     color: var(--sky-text);     border-color: rgba(91,127,255,0.2); }
+.chip-mint    { background: var(--mint-soft);    color: var(--mint-text);    border-color: rgba(0,255,159,0.2); }
+.chip-amber   { background: var(--amber-soft);   color: var(--amber-text);   border-color: rgba(255,204,68,0.2); }
+.chip-lavender{ background: var(--lavender-soft);color: var(--lavender-text);border-color: rgba(155,107,255,0.2);}
+.chip-peach   { background: var(--peach-soft);   color: var(--peach-text);   border-color: rgba(255,123,84,0.2); }
+.popular-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  filter: brightness(1.15);
+}
+
+/* Feature pills */
+.features-row {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;
+  margin-top: 36px;
+}
+.feature-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 13px;
+  background: rgba(110, 90, 255, 0.06);
+  border: 1px solid rgba(110, 90, 255, 0.14);
+  border-radius: var(--r-full);
+  font-size: 0.76rem; font-weight: 500;
+  color: var(--text-secondary);
+}
+.feature-pill svg { color: var(--neon-blue); }
+
+/* Scan buttons — Landing */
+.scan-shortcut-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 16px; flex-wrap: wrap; justify-content: center;
+}
+.scan-shortcut-label {
+  color: var(--text-muted); font-size: 0.78rem;
+}
+.scan-pdf-landing-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px;
+  background: rgba(212, 165, 58, 0.07);
+  border: 1.5px solid rgba(212, 165, 58, 0.22);
+  border-radius: var(--r-md);
+  color: var(--gold-bright); font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; font-family: var(--font-body);
+  transition: all 0.2s; white-space: nowrap;
+}
+.scan-pdf-landing-btn:hover {
+  background: rgba(212, 165, 58, 0.14);
+  border-color: rgba(212, 165, 58, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(212,165,58,0.15);
+}
+.scan-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  background: rgba(212, 165, 58, 0.07);
+  border: 1px solid rgba(212, 165, 58, 0.2);
+  border-radius: var(--r-sm);
+  color: var(--gold-bright); cursor: pointer;
+  transition: all 0.2s;
+}
+.scan-icon-btn:hover {
+  background: rgba(212, 165, 58, 0.14);
+  border-color: rgba(212, 165, 58, 0.35);
+  box-shadow: 0 0 12px rgba(212,165,58,0.14);
+}

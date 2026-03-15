@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vidya — AI Knowledge Companion</title>
+
+  <!-- Fonts: Futuristic — Space Grotesk + Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- D3.js -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+
+  <!-- Marked.js for Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+
+  <!-- PDF.js for PDF preview in Vision modal -->
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script>if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';</script>
+
+  <link rel="stylesheet" href="static/css/style.css" />
+</head>
+<body>
+
+  <!-- ── MOMENTUM BAR (always visible) ─────────── -->
+  <div id="momentum-bar">
+    <div class="momentum-fill" id="momentum-fill"></div>
+    <div class="momentum-tooltip" id="momentum-tooltip">0% explored</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       LANDING SCREEN
+  ═══════════════════════════════════════════════ -->
+  <div id="screen-landing" class="screen active">
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <nav class="landing-nav">
+      <div class="brand">
+        <div class="brand-icon">✦</div>
+        <span class="brand-name">Vidya</span>
+      </div>
+      <div class="nav-pills">
+        <button class="nav-pill" onclick="app.showAbout()">How it works</button>
+        <button class="nav-pill active-cta" onclick="app.focusSearch()">Start Learning</button>
+      </div>
+    </nav>
+
+    <main class="landing-main">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-dot"></span>
+        Powered by Amazon Nova
+      </div>
+
+      <h1 class="hero-title">
+        Learn anything.<br />
+        <em>Deeply</em>.
+      </h1>
+
+      <p class="hero-sub">
+        An AI tutor that maps your subject, explains every concept from first principles,<br />
+        predicts your confusions before you have them, and connects everything together.
+      </p>
+
+      <div class="search-container">
+        <div class="search-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </div>
+        <input
+          id="subject-input"
+          class="search-input"
+          type="text"
+          placeholder="Enter any subject, topic, or exam... (e.g. Indian Polity, JEE Maths, Bioinformatics)"
+          autocomplete="off"
+        />
+        <button class="search-btn" onclick="app.handleSearch()">
+          <span>Explore</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Scan PDF shortcut row -->
+      <div class="scan-shortcut-row">
+        <span class="scan-shortcut-label">Or</span>
+        <button class="scan-pdf-landing-btn" onclick="app.openVision()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Scan PDF / Image
+        </button>
+        <span class="scan-shortcut-label">— upload your textbook page, notes, or question paper</span>
+      </div>
+
+      <div class="popular-section">
+        <span class="popular-label">Popular</span>
+        <div class="popular-chips">
+          <button class="popular-chip chip-rose" onclick="app.quickSearch('Indian Polity for UPSC')">
+            <span class="chip-icon">🏛️</span> Indian Polity
+          </button>
+          <button class="popular-chip chip-sky" onclick="app.quickSearch('JEE Mathematics')">
+            <span class="chip-icon">📐</span> JEE Maths
+          </button>
+          <button class="popular-chip chip-mint" onclick="app.quickSearch('NEET Biology')">
+            <span class="chip-icon">🧬</span> NEET Biology
+          </button>
+          <button class="popular-chip chip-amber" onclick="app.quickSearch('Algorithms in Bioinformatics')">
+            <span class="chip-icon">⚗️</span> Bioinformatics
+          </button>
+          <button class="popular-chip chip-lavender" onclick="app.quickSearch('Machine Learning Theory')">
+            <span class="chip-icon">🤖</span> Machine Learning
+          </button>
+          <button class="popular-chip chip-peach" onclick="app.quickSearch('UPSC Current Affairs Economy')">
+            <span class="chip-icon">📰</span> Current Affairs
+          </button>
+        </div>
+      </div>
+
+      <div class="features-row">
+        <div class="feature-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Book-Mapped Chapters
+        </div>
+        <div class="feature-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Infinite Drill-down
+        </div>
+        <div class="feature-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+          Exam Prediction
+        </div>
+        <div class="feature-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Knowledge Graph
+        </div>
+        <div class="feature-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Smart Doubt Solver
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       RESOURCE SELECTION SCREEN
+  ═══════════════════════════════════════════════ -->
+  <div id="screen-resource" class="screen">
+
+    <div class="orb orb-2" style="opacity:0.4"></div>
+    <div class="orb orb-3" style="opacity:0.3"></div>
+
+    <header class="app-header">
+      <button class="back-btn" onclick="app.goHome()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        Back
+      </button>
+      <div class="header-title" id="resource-header-title">Select Resource</div>
+      <div class="header-actions"></div>
+    </header>
+
+    <div class="resource-main">
+      <div class="resource-intro">
+        <div class="resource-query-label">Searching for</div>
+        <div class="resource-query-text" id="resource-query-text">"Subject"</div>
+        <h2 class="resource-title">Which book or course are you studying from?</h2>
+        <p class="resource-subtitle">Vidya extracts <strong>every chapter</strong> from your specific resource — nothing skipped.</p>
+      </div>
+
+      <!-- Books section -->
+      <div class="resource-section" id="books-section">
+        <div class="resource-section-header">
+          <div class="resource-section-icon">📚</div>
+          <div class="resource-section-label">Books & Textbooks</div>
+        </div>
+        <div class="book-cards-grid" id="book-cards-grid">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Online Courses section -->
+      <div class="resource-section" id="courses-section">
+        <div class="resource-section-header">
+          <div class="resource-section-icon">🎓</div>
+          <div class="resource-section-label">Online Courses & NPTEL</div>
+        </div>
+        <div class="course-cards-grid" id="course-cards-grid">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Custom resource -->
+      <div class="custom-resource-section">
+        <div class="custom-resource-header">
+          <div class="resource-section-icon">✍️</div>
+          <div class="resource-section-label">Enter Custom Resource</div>
+        </div>
+        <div class="custom-resource-row">
+          <input
+            id="custom-book-input"
+            class="custom-book-input"
+            type="text"
+            placeholder="e.g. 'Bioinformatics Algorithms by Compeau & Pevzner, Chapter 1-9'"
+          />
+          <button class="custom-book-btn" onclick="app.selectCustomResource()">
+            Use This →
+          </button>
+        </div>
+        <div class="custom-resource-hint">Works with any textbook, lecture notes, or course syllabus</div>
+      </div>
+
+      <!-- Skip option -->
+      <div style="text-align:center; padding: 8px 0 32px;">
+        <button class="skip-resource-btn" onclick="app.skipResource()">
+          Skip — Generate without specific book
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       SUBJECT MAP SCREEN — Two-step flow
+  ═══════════════════════════════════════════════ -->
+  <div id="screen-subject" class="screen">
+
+    <header class="app-header">
+      <button class="back-btn" onclick="app.goToResource()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        Home
+      </button>
+      <div class="header-title" id="subject-title">Subject</div>
+      <div class="header-actions">
+        <div id="streak-badge-subject" class="streak-badge" style="display:none">
+          <span class="streak-fire">&#x1F525;</span>
+          <span class="streak-num" id="streak-num-subject">0</span>
+          <span class="streak-label">day streak</span>
+        </div>
+        <div class="resource-badge" id="resource-badge" onclick="app.goToResource()"></div>
+        <button class="icon-btn scan-icon-btn" onclick="app.openVision()" title="Scan PDF / Image">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </button>
+        <button class="icon-btn" id="graph-btn" onclick="app.openGraph()" title="Knowledge Graph">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="subject-layout">
+      <div class="subject-overview" id="subject-overview">
+        <div class="overview-loading">
+          <div class="stream-cursor"></div>
+          <div class="skeleton-lines">
+            <div class="skeleton-line w-90"></div>
+            <div class="skeleton-line w-70"></div>
+            <div class="skeleton-line w-80"></div>
+          </div>
+        </div>
+        <div class="overview-text" id="overview-text" style="display:none"></div>
+      </div>
+
+      <div class="chapter-section">
+        <div class="section-header">
+          <span class="section-label">Chapters</span>
+          <span class="chapter-count" id="chapter-count">— loading</span>
+        </div>
+        <div class="chapter-grid" id="chapter-grid"></div>
+      </div>
+
+      <!-- Topics panel — shown when a chapter is clicked -->
+      <div id="topics-panel" class="topics-panel" style="display:none">
+        <div class="topics-panel-header">
+          <button class="topics-back-btn" onclick="app.closeTopicsPanel()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+            All Chapters
+          </button>
+          <div class="topics-panel-title" id="topics-panel-title">Chapter Topics</div>
+          <div class="topics-panel-count" id="topics-panel-count"></div>
+        </div>
+        <div class="topics-panel-desc" id="topics-panel-desc"></div>
+        <div class="topics-grid" id="topics-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       TOPIC VIEW SCREEN
+  ═══════════════════════════════════════════════ -->
+  <div id="screen-topic" class="screen">
+
+    <header class="app-header">
+      <button class="back-btn" onclick="app.goToSubject()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        <span id="back-label">Chapters</span>
+      </button>
+      <div class="breadcrumb" id="breadcrumb">
+        <span class="bc-subject" onclick="app.goHome()"></span>
+        <span class="bc-sep">›</span>
+        <span class="bc-chapter" onclick="app.goToSubject()"></span>
+        <span class="bc-sep">›</span>
+        <span class="bc-topic"></span>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn scan-icon-btn" onclick="app.openVision()" title="Scan PDF / Image">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </button>
+        <button class="icon-btn" onclick="app.openGraph()" title="Knowledge Graph">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Learning mode tabs -->
+    <div class="mode-bar">
+      <button class="mode-tab active" data-mode="concept" onclick="app.setMode('concept')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Deep Concept
+      </button>
+      <button class="mode-tab" data-mode="revision" onclick="app.setMode('revision')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Quick Revision
+      </button>
+      <button class="mode-tab" data-mode="exam" onclick="app.setMode('exam')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Exam Mode
+      </button>
+      <button class="mode-tab" data-mode="visual" onclick="app.setMode('visual')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        Visualize
+      </button>
+      <button class="mode-tab" data-mode="questions" onclick="app.setMode('questions')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Questions
+      </button>
+      <div class="mode-divider"></div>
+      <button class="mode-tab mode-reels" onclick="app.openReels()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+        Reels
+      </button>
+      <button class="mode-tab mode-battle" onclick="app.openBattle()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Battle
+      </button>
+    </div>
+
+    <div class="topic-layout">
+
+      <!-- Main content column -->
+      <div class="content-column">
+
+        <div class="topic-header">
+          <div class="topic-tag" id="topic-tag">Topic</div>
+          <h1 class="topic-title" id="topic-title">Loading...</h1>
+          <div class="topic-meta">
+            <span class="meta-badge badge-exam" id="exam-freq">—</span>
+            <span class="meta-badge badge-diff" id="difficulty">—</span>
+            <span class="meta-badge badge-time" id="read-time">—</span>
+          </div>
+        </div>
+
+        <!-- Content area (main, concept/revision/exam/visual) -->
+        <div class="content-area" id="content-area">
+          <div class="content-skeleton">
+            <div class="skeleton-block"></div>
+            <div class="skeleton-block short"></div>
+            <div class="skeleton-block"></div>
+            <div class="skeleton-block medium"></div>
+          </div>
+        </div>
+
+        <!-- Visualize panel (shown only in visual mode) -->
+        <div id="visual-panel" style="display:none">
+          <div class="visual-graph-section">
+            <div class="visual-graph-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Concept Network
+            </div>
+            <svg id="visual-graph" width="100%" height="380" style="border-radius:12px;background:var(--surface-2)"></svg>
+            <div class="visual-graph-hint">Hover to highlight connections · Click to navigate</div>
+          </div>
+        </div>
+
+        <!-- ── Predicted Doubts ─────────────────── -->
+        <div class="doubts-section" id="doubts-section" style="display:none">
+          <div class="doubts-header">
+            <div class="doubts-icon">💡</div>
+            <div>
+              <div class="doubts-title">Predicted Confusions</div>
+              <div class="doubts-sub">Click any doubt — AI explains it instantly</div>
+            </div>
+          </div>
+          <div class="doubt-chips" id="doubt-chips"></div>
+        </div>
+
+        <!-- ── Exam Questions (only in Questions tab) ─── -->
+        <div class="questions-section" id="questions-section" style="display:none">
+          <div class="questions-header">
+            <div class="q-icon">📋</div>
+            <div>
+              <div class="questions-title">Exam-Predicted Questions</div>
+              <div class="questions-sub">Generated from PYQ pattern analysis</div>
+            </div>
+            <div class="q-accuracy">
+              <span class="q-acc-num" id="q-acc-num">87%</span>
+              <span class="q-acc-label">hit rate</span>
+            </div>
+          </div>
+          <div class="questions-list" id="questions-list"></div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar column -->
+      <aside class="sidebar-column">
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Concept Network
+          </div>
+          <div class="mini-graph-container">
+            <svg id="mini-graph" width="100%" height="200"></svg>
+          </div>
+          <button class="expand-graph-btn" onclick="app.openGraph()">Expand Full Graph →</button>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Prerequisites
+          </div>
+          <div class="prereq-list" id="prereq-list">
+            <div class="prereq-loading">
+              <div class="skeleton-line w-80"></div>
+              <div class="skeleton-line w-60"></div>
+              <div class="skeleton-line w-75"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Connected Concepts
+          </div>
+          <div class="related-list" id="related-list">
+            <div class="prereq-loading">
+              <div class="skeleton-line w-70"></div>
+              <div class="skeleton-line w-85"></div>
+              <div class="skeleton-line w-60"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card progress-card">
+          <div class="sidebar-card-title">Session Progress</div>
+          <div class="progress-stats">
+            <div class="prog-stat">
+              <div class="prog-num" id="topics-covered">1</div>
+              <div class="prog-label">Topics</div>
+            </div>
+            <div class="prog-stat">
+              <div class="prog-num" id="doubts-resolved">0</div>
+              <div class="prog-label">Doubts</div>
+            </div>
+            <div class="prog-stat">
+              <div class="prog-num" id="depth-level">L1</div>
+              <div class="prog-label">Depth</div>
+            </div>
+          </div>
+          <!-- XP Bar -->
+          <div class="xp-bar-wrap" id="xp-bar-wrap"></div>
+        </div>
+
+
+      </aside>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       KNOWLEDGE GRAPH MODAL
+  ═══════════════════════════════════════════════ -->
+  <div id="modal-graph" class="modal-overlay" style="display:none">
+    <div class="modal-graph-content">
+      <div class="modal-graph-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Knowledge Graph — <span id="graph-subject-label"></span>
+        </div>
+        <div class="modal-graph-legend">
+          <div class="legend-item"><div class="legend-dot dot-core"></div> Core</div>
+          <div class="legend-item"><div class="legend-dot dot-prereq"></div> Prerequisite</div>
+          <div class="legend-item"><div class="legend-dot dot-related"></div> Related</div>
+          <div class="legend-item"><div class="legend-dot dot-cross"></div> Cross-Subject</div>
+        </div>
+        <button class="close-btn" onclick="app.closeGraph()">✕</button>
+      </div>
+      <div class="graph-svg-wrapper">
+        <svg id="full-graph"></svg>
+      </div>
+      <div class="graph-tooltip" id="graph-tooltip"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       DOUBT PANEL (slide-in from right)
+  ═══════════════════════════════════════════════ -->
+  <div id="panel-doubt" class="doubt-panel">
+    <div class="doubt-panel-header">
+      <div class="doubt-panel-title">
+        <div class="dp-icon">💬</div>
+        <span id="doubt-question-label">Explaining your doubt...</span>
+      </div>
+      <button class="close-btn" onclick="app.closeDoubtPanel()">✕</button>
+    </div>
+    <div class="doubt-panel-content" id="doubt-panel-content">
+      <div class="dp-skeleton">
+        <div class="skeleton-line w-90"></div>
+        <div class="skeleton-line w-70"></div>
+        <div class="skeleton-line w-85"></div>
+        <div class="skeleton-line w-50"></div>
+      </div>
+    </div>
+    <div class="doubt-panel-footer">
+      <button class="drill-btn" id="drill-deeper-btn" onclick="app.drillDeeper()" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+        Go Deeper on Prerequisites
+      </button>
+      <button class="ask-follow-btn" onclick="app.askFollowUp()">
+        Ask a follow-up...
+      </button>
+    </div>
+  </div>
+  <div id="doubt-overlay" class="doubt-overlay" onclick="app.closeDoubtPanel()" style="display:none"></div>
+
+  <!-- ════════════════════════════════════════════
+       CONCEPT DRILL MODAL
+  ═══════════════════════════════════════════════ -->
+  <div id="modal-drill" class="modal-overlay" style="display:none">
+    <div class="modal-drill-content">
+      <div class="modal-drill-header">
+        <div class="drill-breadcrumb" id="drill-breadcrumb"></div>
+        <button class="close-btn" onclick="app.closeDrill()">✕</button>
+      </div>
+      <div class="drill-content-area" id="drill-content-area"></div>
+      <div class="drill-prereqs" id="drill-prereqs"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       QUESTION ANSWER MODAL
+  ═══════════════════════════════════════════════ -->
+  <div id="modal-answer" class="modal-overlay" style="display:none">
+    <div class="modal-answer-content">
+      <div class="modal-answer-header">
+        <div class="modal-title">Answer Explanation</div>
+        <button class="close-btn" onclick="app.closeAnswer()">✕</button>
+      </div>
+      <div class="answer-content" id="answer-content"></div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ════════════════════════════════════════════
+       VISION MODAL — Fullscreen Split Panel
+       Left: PDF / Image viewer with scrollable pages + zoom
+       Right: Question + Nova analysis results
+  ═══════════════════════════════════════════════ -->
+  <div id="modal-vision" class="modal-overlay" style="display:none">
+    <div class="modal-vision-content">
+
+      <!-- TOP BAR -->
+      <div class="modal-vision-header">
+        <div class="vision-header-left">
+          <div class="vision-icon-badge">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <div>
+            <div class="vision-title">Nova Vision — Scan &amp; Explain</div>
+            <div class="vision-subtitle" id="vision-file-status">Upload a PDF page, image, or screenshot of your notes</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="vision-toolbar-btn" onclick="document.getElementById('vision-file-input').click()" title="Change file">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Upload
+          </button>
+          <input type="file" id="vision-file-input" accept="image/*,.pdf" style="display:none" onchange="app.handleVisionFile(event)">
+          <button class="modal-close-btn" onclick="app.closeVision()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- SPLIT BODY -->
+      <div class="vision-split-body">
+
+        <!-- ── LEFT: PDF/Image Viewer with zoom ──────────── -->
+        <div class="vision-image-panel">
+          <div class="vision-image-toolbar">
+            <span class="vision-toolbar-label">📄 Document Preview</span>
+            <!-- Zoom controls for PDF -->
+            <div class="vision-zoom-controls" id="vision-zoom-controls" style="display:none">
+              <button class="vision-toolbar-btn" onclick="app.visionZoomOut()" title="Zoom Out">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </button>
+              <span class="vision-zoom-level" id="vision-zoom-level">100%</span>
+              <button class="vision-toolbar-btn" onclick="app.visionZoomIn()" title="Zoom In">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </button>
+              <button class="vision-toolbar-btn" onclick="app.visionZoomFit()" title="Fit to view">Fit</button>
+            </div>
+            <!-- PDF page nav -->
+            <div class="vision-page-nav" id="vision-page-nav" style="display:none">
+              <button class="vision-toolbar-btn" onclick="app.visionPrevPage()">← Prev</button>
+              <span class="vision-page-info" id="vision-page-info">1 / 1</span>
+              <button class="vision-toolbar-btn" onclick="app.visionNextPage()">Next →</button>
+            </div>
+            <button class="vision-toolbar-btn" id="vision-capture-mode-btn"
+                    onclick="app.toggleVisionCaptureMode()" title="Draw a selection box to capture a specific region">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3h5M3 3v5M21 3h-5M21 3v5M3 21h5M3 21v-5M21 21h-5M21 21v-5"/>
+              </svg>
+              Select Region
+            </button>
+            <button class="vision-toolbar-btn" onclick="app.analyzeFullImage()" title="Analyze entire image">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              Analyze All
+            </button>
+          </div>
+
+          <div class="vision-image-viewport" id="vision-image-viewport"
+               ondrop="app.handleVisionDrop(event)"
+               ondragover="event.preventDefault();this.classList.add('drag-over')"
+               ondragleave="this.classList.remove('drag-over')">
+
+            <!-- Drop zone (shown before upload) -->
+            <div id="vision-drop-idle" class="vision-dropzone-center"
+                 onclick="document.getElementById('vision-file-input').click()">
+              <div class="vision-drop-glyph">📄</div>
+              <div class="vision-drop-heading">Drop your file here</div>
+              <div class="vision-drop-hint">Or click to browse your files</div>
+              <div class="vision-drop-formats">
+                <span class="vision-fmt-tag">PDF</span>
+                <span class="vision-fmt-tag">PNG</span>
+                <span class="vision-fmt-tag">JPG</span>
+                <span class="vision-fmt-tag">WEBP</span>
+                <span class="vision-fmt-tag">GIF</span>
+              </div>
+              <button class="vision-browse-btn">Browse Files</button>
+            </div>
+
+            <!-- Scrollable PDF pages container -->
+            <div id="vision-pdf-scroll" class="vision-pdf-scroll" style="display:none">
+              <!-- PDF pages rendered here as canvases -->
+            </div>
+
+            <!-- Image display (shown after upload for non-PDF) -->
+            <div id="vision-loaded-wrap" class="vision-loaded-img-wrap" style="display:none">
+              <img id="vision-preview-img" src="" alt="Uploaded content" class="vision-loaded-img"
+                   onmousedown="app.startVisionSelection(event)"
+                   onmousemove="app.updateVisionSelection(event)"
+                   onmouseup="app.endVisionSelection(event)"/>
+              <!-- Selection rectangle drawn by JS -->
+              <div id="vision-selection-rect" class="vision-selection-rect" style="display:none"></div>
+              <div class="vision-capture-hint" id="vision-capture-hint" style="display:none">
+                🖱 Drag to select a region → then click Analyze Selection
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── RESIZE HANDLE ─────────────── -->
+        <div class="vision-resize-handle" id="vision-resize-handle" title="Drag to resize">
+          <div class="vision-resize-grip"></div>
+        </div>
+
+        <!-- ── RIGHT: Analysis Panel ─────────────── -->
+        <div class="vision-analysis-panel" id="vision-analysis-panel">
+
+          <!-- Question input -->
+          <div class="vision-analysis-top">
+            <div class="vision-question-label">Ask Nova about this content</div>
+            <textarea id="vision-question-input" class="vision-question-input"
+                      rows="3"
+                      placeholder="e.g. Explain the diagram on this page&#10;What is the key concept here?&#10;Solve this problem step by step"></textarea>
+          </div>
+
+          <!-- Analyze buttons -->
+          <div style="padding:0 18px 14px; display:flex; gap:8px; border-bottom:1px solid var(--glass-border); flex-shrink:0;">
+            <button id="vision-analyze-btn" class="vision-analyze-btn" style="margin:0;flex:1;" onclick="app.analyzeVisionImage()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              Analyze with Nova
+            </button>
+            <button id="vision-analyze-selection-btn" class="vision-analyze-btn"
+                    style="margin:0;width:auto;padding:12px 16px;background:rgba(155,107,255,0.15);color:var(--lavender-text);border:1px solid rgba(155,107,255,0.3);box-shadow:none;display:none;"
+                    onclick="app.analyzeVisionSelection()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3h5M3 3v5M21 3h-5M21 3v5M3 21h5M3 21v-5M21 21h-5M21 21v-5"/>
+              </svg>
+              Selection
+            </button>
+          </div>
+
+          <!-- Result area -->
+          <div class="vision-result-area" id="vision-result-area">
+            <!-- Placeholder -->
+            <div class="vision-result-placeholder" id="vision-result-placeholder">
+              <div class="vision-result-placeholder-icon">🔭</div>
+              <div class="vision-result-placeholder-text">
+                Upload an image or PDF page,<br>then click <strong style="color:var(--neon-cyan)">Analyze with Nova</strong><br>to get instant AI explanations.
+              </div>
+            </div>
+            <!-- Results rendered here -->
+            <div id="vision-result-content-wrap" class="vision-result-content-wrap" style="display:none">
+              <div class="vision-result-bar">
+                <div class="vision-result-label">Nova Vision Analysis</div>
+                <button class="vision-copy-btn" onclick="app.copyVisionResult()">📋 Copy</button>
+              </div>
+              <div id="vision-result-content" class="content-area" style="background:transparent;border:none;padding:0;"></div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- end split body -->
+
+    </div>
+  </div>
+
+  <!-- Pronunciation tooltip (appears on text selection) -->
+  <div id="pronounce-tooltip" class="pronounce-tooltip" style="display:none">
+    <button class="pronounce-btn" id="pronounce-btn" onclick="app.pronounceSelected()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      Pronounce
+    </button>
+  </div>
+
+  <!-- Floating Vision FAB -->
+  <div id="vision-fab" class="vision-fab" onclick="app.openVision()" title="Scan PDF or image with Nova Vision" style="display:none">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    <span>Scan</span>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       KNOWLEDGE REELS (fullscreen overlay)
+  ═══════════════════════════════════════════════ -->
+  <div id="reels-container">
+    <div class="reels-topbar">
+      <div class="reels-topic" id="reels-topic-label">Topic</div>
+      <div class="reels-counter" id="reels-counter">1/12</div>
+      <button class="reels-close" id="reels-close-btn">&times;</button>
+    </div>
+    <div class="reels-progress">
+      <div class="reels-progress-fill" id="reels-progress-fill"></div>
+    </div>
+    <div class="reels-card-area" id="reels-card-area"></div>
+    <div class="reels-swipe-hint" id="reels-swipe-hint">Swipe up or press Space for next</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       BATTLE ARENA (fullscreen overlay)
+  ═══════════════════════════════════════════════ -->
+  <div id="battle-arena">
+    <div class="battle-header">
+      <div class="battle-title">Battle Mode</div>
+      <button class="battle-close" id="battle-close-btn">&times;</button>
+    </div>
+    <div class="battle-scoreboard">
+      <div class="battle-player-score">
+        <div class="score-label">You</div>
+        <div class="score-num" id="battle-player-score">0</div>
+      </div>
+      <div class="battle-vs">VS</div>
+      <div class="battle-nova-score">
+        <div class="score-label">Nova AI</div>
+        <div class="score-num" id="battle-nova-score">0</div>
+      </div>
+    </div>
+    <div class="battle-question-area" id="battle-question-area">
+      <div class="battle-loading">
+        <div class="battle-vs-anim">VS</div>
+        <div style="color:var(--ink-700);margin-top:12px">Preparing Battle...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       NUDGE CARD (bottom slide-in)
+  ═══════════════════════════════════════════════ -->
+  <div class="nudge-card" id="nudge-card">
+    <div class="nudge-icon" id="nudge-icon">&#x1F4A1;</div>
+    <div class="nudge-text" id="nudge-text"></div>
+    <button class="nudge-action" id="nudge-action" style="display:none"></button>
+    <button class="nudge-dismiss" id="nudge-dismiss">&times;</button>
+  </div>
+
+  <script src="static/js/renderer.js"></script>
+  <script src="static/js/graph.js"></script>
+  <script src="static/js/gamification.js"></script>
+  <script src="static/js/reels.js"></script>
+  <script src="static/js/focus.js"></script>
+  <script src="static/js/battle.js"></script>
+  <script src="static/js/nudge.js"></script>
+  <script src="static/js/demo-data.js"></script>
+  <script src="static/js/api.js"></script>
+  <script src="static/js/vision.js"></script>
+  <script src="static/js/app.js"></script>
+</body>
+</html>

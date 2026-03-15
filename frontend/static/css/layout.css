@@ -1,0 +1,113 @@
+/* ── Ambient background — three soft orbs ──────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  background:
+    /* top-left: subtle gold orb */
+    radial-gradient(ellipse 60vw 50vh at 5% 0%,  rgba(212,165,58,0.055) 0%, transparent 70%),
+    /* top-right: blue orb */
+    radial-gradient(ellipse 55vw 45vh at 95% 5%,  rgba(79,130,245,0.045) 0%, transparent 70%),
+    /* bottom-center: violet orb */
+    radial-gradient(ellipse 70vw 40vh at 50% 100%, rgba(155,127,234,0.04) 0%, transparent 65%);
+}
+
+/* Subtle dot matrix overlay for texture (not a grid) */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ── Screens ────────────────────────────────────────────────── */
+.screen {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+.screen.active { display: block; }
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 14s ease-in-out infinite;
+}
+.orb-1 {
+  width: 600px; height: 600px;
+  top: -200px; left: -200px;
+  background: radial-gradient(circle, rgba(91,127,255,0.18) 0%, transparent 70%);
+  animation-duration: 18s;
+}
+.orb-2 {
+  width: 500px; height: 500px;
+  top: 10%; right: -150px;
+  background: radial-gradient(circle, rgba(155,107,255,0.15) 0%, transparent 70%);
+  animation-duration: 22s; animation-delay: -6s;
+}
+.orb-3 {
+  width: 400px; height: 400px;
+  bottom: 5%; left: 30%;
+  background: radial-gradient(circle, rgba(0,220,255,0.12) 0%, transparent 70%);
+  animation-duration: 16s; animation-delay: -10s;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(30px, -40px) scale(1.05); }
+  66%  { transform: translate(-20px, 30px) scale(0.96); }
+}
+
+.app-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 24px;
+  background: var(--glass);
+  border-bottom: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  position: sticky; top: 0; z-index: 50;
+}
+.back-btn {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  color: var(--text-secondary);
+  font-size: 0.8rem; font-weight: 500; font-family: var(--font-body);
+  padding: 7px 12px; cursor: pointer;
+  transition: all var(--dur-fast);
+  flex-shrink: 0;
+}
+.back-btn:hover {
+  background: rgba(212, 165, 58, 0.09);
+  color: var(--gold-bright);
+  border-color: rgba(212, 165, 58, 0.3);
+}
+.header-title {
+  flex: 1; text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--dur-fast);
+}
+.icon-btn:hover {
+  background: rgba(212, 165, 58, 0.1);
+  color: var(--gold-bright);
+  border-color: rgba(212, 165, 58, 0.3);
+  box-shadow: 0 0 12px rgba(212,165,58,0.14);
+}

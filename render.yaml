@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: vidya-ai
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: NOVA_API_KEY
+        sync: false
+      - key: NOVA_BASE_URL
+        value: https://api.nova.amazon.com/v1
+      - key: NOVA_MODEL
+        value: nova-2-lite-v1
+      - key: PYTHON_VERSION
+        value: "3.11"

@@ -1,0 +1,160 @@
+/* ── Momentum Bar (top of page) ── */
+#momentum-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  height: 3px; background: rgba(255,255,255,0.03);
+  pointer-events: auto; overflow: visible;
+}
+#momentum-bar .momentum-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-bright));
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 8px rgba(212,165,58,0.4);
+}
+#momentum-bar.milestone .momentum-fill {
+  animation: momentumPulse 1.5s ease infinite;
+}
+@keyframes momentumPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(212,165,58,0.4); }
+  50% { box-shadow: 0 0 20px rgba(212,165,58,0.8); }
+}
+#momentum-bar .momentum-tooltip {
+  position: absolute; top: 8px; right: 16px;
+  background: #182030; border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px; padding: 8px 14px; font-size: 0.75rem;
+  color: #ffffff; pointer-events: auto; opacity: 0;
+  transition: opacity 0.2s; white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+#momentum-bar:hover .momentum-tooltip { opacity: 1; }
+
+/* ── Streak Badge (nav area) ── */
+.streak-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--gold-soft); border: 1px solid rgba(212,165,58,0.25);
+  border-radius: var(--r-full); padding: 4px 12px 4px 8px;
+  font-size: 0.78rem; font-weight: 600; color: var(--gold-bright);
+  cursor: default; transition: all 0.2s;
+}
+.streak-badge:hover { background: rgba(212,165,58,0.18); }
+.streak-badge .streak-fire { font-size: 1rem; }
+.streak-badge .streak-num { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+.streak-badge .streak-label { font-size: 0.68rem; color: var(--ink-700); margin-left: 2px; }
+
+/* ── XP Bar (sidebar progress card) ── */
+.xp-bar-wrap {
+  margin-top: 10px;
+}
+.xp-bar-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.72rem; color: var(--ink-700); margin-bottom: 4px;
+}
+.xp-bar-header .xp-level { color: var(--gold); font-weight: 700; font-size: 0.8rem; }
+.xp-bar-header .xp-title { color: var(--ink-800); font-style: italic; }
+.xp-bar-track {
+  height: 6px; background: rgba(255,255,255,0.05);
+  border-radius: 3px; overflow: hidden;
+}
+.xp-bar-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.xp-bar-nums {
+  display: flex; justify-content: space-between;
+  font-size: 0.65rem; color: var(--ink-700); margin-top: 2px;
+}
+
+/* ── XP Popup ── */
+.xp-popup {
+  position: fixed; top: 70px; right: 24px; z-index: 10000;
+  background: var(--gold-soft); border: 1px solid rgba(212,165,58,0.3);
+  border-radius: 12px; padding: 8px 16px;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 1rem; color: var(--gold-bright);
+  animation: xpPopIn 0.4s ease, xpPopOut 0.3s ease 1.5s forwards;
+  pointer-events: none;
+}
+@keyframes xpPopIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.8); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes xpPopOut {
+  to { opacity: 0; transform: translateY(-20px) scale(0.8); }
+}
+
+/* ── Level Up Animation ── */
+.level-up-overlay {
+  position: fixed; inset: 0; z-index: 10001;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(7,11,18,0.85); backdrop-filter: blur(8px);
+  animation: levelUpFadeIn 0.5s ease;
+}
+@keyframes levelUpFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.level-up-overlay .level-up-badge {
+  font-size: 4rem; margin-bottom: 12px;
+  animation: levelUpBounce 0.6s ease;
+}
+@keyframes levelUpBounce {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+.level-up-overlay .level-up-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.8rem; font-weight: 800; color: var(--gold-bright);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.level-up-overlay .level-up-title {
+  font-size: 1.1rem; color: var(--ink-800); margin-top: 4px;
+}
+.level-up-confetti {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+}
+.level-up-confetti span {
+  position: absolute; width: 8px; height: 8px; border-radius: 2px;
+  animation: confettiFall 2s ease forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ── Curiosity Hooks (after topic content) ── */
+.curiosity-hooks {
+  margin-top: 32px; padding-top: 24px;
+  border-top: 1px solid var(--glass-border);
+}
+.curiosity-hooks-title {
+  font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--gold); font-weight: 700; margin-bottom: 12px;
+}
+.curiosity-hook {
+  background: var(--bg-raised); border: 1px solid var(--glass-border);
+  border-radius: 12px; padding: 16px 20px; margin-bottom: 10px;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 12px;
+}
+.curiosity-hook:hover {
+  border-color: var(--gold-dim);
+  background: var(--bg-hover);
+  transform: translateX(4px);
+}
+.curiosity-hook .hook-arrow {
+  color: var(--gold); font-size: 1.2rem; flex-shrink: 0;
+}
+.curiosity-hook .hook-text {
+  font-size: 0.9rem; color: var(--ink-900); line-height: 1.5;
+}
+
+/* ── Streak warning banner ── */
+.streak-warning {
+  position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; background: rgba(248,113,113,0.12);
+  border: 1px solid rgba(248,113,113,0.3);
+  border-radius: var(--r-full); padding: 8px 20px;
+  font-size: 0.8rem; color: var(--red);
+  animation: slideUpIn 0.3s ease;
+  cursor: pointer;
+}
+.streak-warning:hover { background: rgba(248,113,113,0.18); }

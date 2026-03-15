@@ -1,0 +1,1 @@
+"""Vidya API route definitions."""
