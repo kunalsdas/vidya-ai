@@ -147,9 +147,13 @@ const VidyaGamification = new (class {
     const pct = this.getMomentumPercent();
     if (fill) fill.style.width = pct + '%';
     if (tooltip) {
-      const ch = this.state.chaptersExplored.length;
-      const tp = this.state.topicsRead.length;
-      tooltip.textContent = `${pct}% explored · ${ch}/${this.state.totalChapters || '?'} chapters · ${tp}/${this.state.totalTopics || '?'} topics`;
+      const hasData = this.state.totalChapters > 0 || this.state.totalTopics > 0;
+      tooltip.classList.toggle('active', hasData);
+      if (hasData) {
+        const ch = this.state.chaptersExplored.length;
+        const tp = this.state.topicsRead.length;
+        tooltip.textContent = `${pct}% explored · ${ch}/${this.state.totalChapters || '?'} chapters · ${tp}/${this.state.totalTopics || '?'} topics`;
+      }
     }
     bar.classList.toggle('milestone', pct >= 25 && pct < 100);
   }
