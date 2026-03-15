@@ -1151,6 +1151,7 @@ class VidyaApp {
 }
 
 const app = new VidyaApp();
+window.app = app;
 
 const _origShowScreen = app._showScreen.bind(app);
 app._showScreen = function(id) {
